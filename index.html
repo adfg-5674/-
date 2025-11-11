@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>致我们未落幕的大学青春</title>
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f9f5e8;
+            color: #5a3921;
+            line-height: 1.6;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M50,10 C60,20 70,30 50,50 C30,70 20,60 10,50 C0,40 20,20 50,10 Z" fill="none" stroke="%23e8d8c3" stroke-width="2"/></svg>');
+            background-size: 200px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* 银杏叶装饰 */
+        .ginkgo-leaf {
+            position: absolute;
+            width: 30px;
+            height: 50px;
+            background-color: #e8b923;
+            clip-path: path('M15,0 C22,10 30,20 15,50 C0,20 8,10 15,0 Z');
+            opacity: 0.7;
+            z-index: -1;
+        }
+        
+        .ginkgo-leaf:nth-child(odd) {
+            background-color: #f4d03f;
+        }
+        
+        /* 头部样式 */
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #8b4513;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            color: #a0522d;
+        }
+        
+        /* 故事卡片样式 */
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .story-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .story-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .story-card:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, #e8b923, #f4d03f);
+        }
+        
+        .story-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #8b4513;
+        }
+        
+        .story-excerpt {
+            color: #666;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .story-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #999;
+        }
+        
+        /* 按钮样式 */
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #e8b923;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .btn:hover {
+            background-color: #d4a017;
+        }
+        
+        .btn-secondary {
+            background-color: #8b4513;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #6b3410;
+        }
+        
+        /* 表单样式 */
+        .form-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+        }
+        
+        /* 页脚样式 */
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 50px;
+            border-top: 1px solid #e8d8c3;
+            color: #a0522d;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .stories-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 银杏叶装饰 -->
+    <div class="ginkgo-leaf" style="top: 10%; left: 5%;"></div>
+    <div class="ginkgo-leaf" style="top: 20%; right: 10%;"></div>
+    <div class="ginkgo-leaf" style="top: 60%; left: 8%;"></div>
+    <div class="ginkgo-leaf" style="top: 40%; right: 5%;"></div>
+    
+    <div class="container">
+        <header>
+            <h1>致我们未落幕的大学青春</h1>
+            <p>匿名信笺，藏着彼此的事儿，在这里，写下你的某帧画面、某句心动、某次笨拙的勇敢。你的故事，会和无数个"我们"的故事重叠，拼成最完整的大学青春图谱。</p>
+            <div style="margin-top: 30px;">
+                <button id="createStoryBtn" class="btn">写下我的故事</button>
+                <button id="viewMyStoriesBtn" class="btn btn-secondary">查看我的故事</button>
+            </div>
+        </header>
+        
+        <main>
+            <h2 style="text-align: center; margin: 40px 0 20px;">大家的青春故事</h2>
+            <div class="stories-grid" id="storiesGrid">
+                <!-- 故事卡片将通过JavaScript动态加载 -->
+            </div>
+        </main>
+        
+        <footer>
+            <p>© 2023 青春纪念册 | 分享我们的青春故事</p>
+            <div style="margin-top: 15px;">
+                <button id="shareBtn" class="btn">分享这个网站</button>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- 创建故事模态框 -->
+    <div id="createStoryModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>写下你的青春故事</h2>
+            <form id="storyForm">
+                <div class="form-group">
+                    <label for="storyTitle">故事标题</label>
+                    <input type="text" id="storyTitle" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="storyContent">故事内容</label>
+                    <textarea id="storyContent" class="form-control" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="storyVisibility">可见性设置</label>
+                    <select id="storyVisibility" class="form-control">
+                        <option value="public">所有人可见</option>
+                        <option value="private">仅自己可见</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="storyPassword">访问密码 (用于以后编辑)</label>
+                    <input type="password" id="storyPassword" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn">保存故事</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- 分享模态框 -->
+    <div id="shareModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>分享青春纪念册</h2>
+            <p>复制以下链接分享给朋友：</p>
+            <div style="display: flex; margin: 20px 0;">
+                <input type="text" id="shareUrl" class="form-control" value="https://youth-memories.com" readonly>
+                <button id="copyUrlBtn" class="btn" style="margin-left: 10px;">复制</button>
+            </div>
+            <p>或直接分享到：</p>
+            <div style="margin-top: 15px;">
+                <button class="btn" style="background-color: #3b5998; margin-right: 10px;">微信</button>
+                <button class="btn" style="background-color: #1da1f2; margin-right: 10px;">微博</button>
+                <button class="btn" style="background-color: #dd4b39;">QQ</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 银杏叶装饰生成
+        function createGinkgoLeaves() {
+            const body = document.querySelector('body');
+            for (let i = 0; i < 10; i++) {
+                const leaf = document.createElement('div');
+                leaf.className = 'ginkgo-leaf';
+                leaf.style.top = `${Math.random() * 100}%`;
+                leaf.style.left = `${Math.random() * 100}%`;
+                leaf.style.transform = `rotate(${Math.random() * 360}deg) scale(${0.5 + Math.random() * 0.5})`;
+                leaf.style.opacity = 0.3 + Math.random() * 0.4;
+                body.appendChild(leaf);
+            }
+        }
+        
+        // 示例故事数据
+        const sampleStories = [
+            {
+                id: 1,
+                title: "图书馆的偶遇",
+                excerpt: "那天在图书馆三楼，我正埋头苦读，一抬头，看到了那双让我心动的眼睛...",
+                likes: 23,
+                comments: 5,
+                isPublic: true
+            },
+            {
+                id: 2,
+                title: "第一次参加社团活动",
+                excerpt: "还记得大一刚入学时，我鼓起勇气参加了话剧社的面试，虽然紧张得说话都结巴了...",
+                likes: 15,
+                comments: 3,
+                isPublic: true
+            },
+            {
+                id: 3,
+                title: "毕业前的最后一晚",
+                excerpt: "宿舍里只剩下我和上铺的兄弟，我们聊了一整夜，从入学第一天聊到未来规划...",
+                likes: 42,
+                comments: 12,
+                isPublic: true
+            }
+        ];
+        
+        // 加载故事列表
+        function loadStories() {
+            const storiesGrid = document.getElementById('storiesGrid');
+            storiesGrid.innerHTML = '';
+            
+            // 从localStorage获取用户故事
+            let userStories = JSON.parse(localStorage.getItem('userStories')) || [];
+            
+            // 合并示例故事和用户故事
+            const allStories = [...sampleStories, ...userStories.filter(story => story.isPublic)];
+            
+            allStories.forEach(story => {
+                const storyCard = document.createElement('div');
+                storyCard.className = 'story-card';
+                storyCard.innerHTML = `
+                    <h3 class="story-title">${story.title}</h3>
+                    <p class="story-excerpt">${story.excerpt}</p>
+                    <div class="story-meta">
+                        <span>❤️ ${story.likes || 0}</span>
+                        <span>💬 ${story.comments || 0}</span>
+                    </div>
+                `;
+                storyCard.addEventListener('click', () => {
+                    viewStory(story.id);
+                });
+                storiesGrid.appendChild(storyCard);
+            });
+        }
+        
+        // 查看故事详情
+        function viewStory(storyId) {
+            alert(`查看故事 ${storyId} 的详情`);
+            // 实际应用中，这里会跳转到故事详情页
+        }
+        
+        // 创建新故事
+        function createStory() {
+            document.getElementById('createStoryModal').style.display = 'flex';
+        }
+        
+        // 保存故事
+        function saveStory(event) {
+            event.preventDefault();
+            
+            const title = document.getElementById('storyTitle').value;
+            const content = document.getElementById('storyContent').value;
+            const visibility = document.getElementById('storyVisibility').value;
+            const password = document.getElementById('storyPassword').value;
+            
+            // 简单的内容过滤
+            const filteredContent = filterContent(content);
+            if (filteredContent !== content) {
+                alert('您的内容包含不适当用语，请修改后再提交');
+                document.getElementById('storyContent').value = filteredContent;
+                return;
+            }
+            
+            // 创建故事对象
+            const newStory = {
+                id: Date.now(), // 使用时间戳作为ID
+                title: title,
+                content: content,
+                excerpt: content.length > 100 ? content.substring(0, 100) + '...' : content,
+                isPublic: visibility === 'public',
+                password: password, // 实际应用中应对密码进行加密
+                likes: 0,
+                comments: 0,
+                createdAt: new Date().toISOString()
+            };
+            
+            // 保存到localStorage
+            let userStories = JSON.parse(localStorage.getItem('userStories')) || [];
+            userStories.push(newStory);
+            localStorage.setItem('userStories', JSON.stringify(userStories));
+            
+            // 关闭模态框并重置表单
+            document.getElementById('createStoryModal').style.display = 'none';
+            document.getElementById('storyForm').reset();
+            
+            // 重新加载故事列表
+            loadStories();
+            
+            alert('故事保存成功！');
+        }
+        
+        // 简单的内容过滤函数
+        function filterContent(content) {
+            const badWords = ['脏话1', '脏话2', '不文明用语']; // 这里应包含实际需要过滤的词汇
+            let filteredContent = content;
+            
+            badWords.forEach(word => {
+                const regex = new RegExp(word, 'gi');
+                filteredContent = filteredContent.replace(regex, '***');
+            });
+            
+            return filteredContent;
+        }
+        
+        // 查看我的故事
+        function viewMyStories() {
+            const password = prompt('请输入您的访问密码：');
+            if (!password) return;
+            
+            let userStories = JSON.parse(localStorage.getItem('userStories')) || [];
+            const myStories = userStories.filter(story => story.password === password);
+            
+            if (myStories.length === 0) {
+                alert('未找到匹配的故事或密码错误');
+                return;
+            }
+            
+            // 显示用户故事列表
+            alert(`找到 ${myStories.length} 个您的故事`);
+            // 实际应用中，这里会跳转到用户故事管理页面
+        }
+        
+        // 分享网站
+        function shareWebsite() {
+            document.getElementById('shareModal').style.display = 'flex';
+        }
+        
+        // 复制分享链接
+        function copyShareUrl() {
+            const shareUrl = document.getElementById('shareUrl');
+            shareUrl.select();
+            document.execCommand('copy');
+            alert('链接已复制到剪贴板');
+        }
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            createGinkgoLeaves();
+            loadStories();
+            
+            // 事件监听
+            document.getElementById('createStoryBtn').addEventListener('click', createStory);
+            document.getElementById('viewMyStoriesBtn').addEventListener('click', viewMyStories);
+            document.getElementById('shareBtn').addEventListener('click', shareWebsite);
+            document.getElementById('storyForm').addEventListener('submit', saveStory);
+            document.getElementById('copyUrlBtn').addEventListener('click', copyShareUrl);
+            
+            // 关闭模态框
+            document.querySelectorAll('.close-modal').forEach(closeBtn => {
+                closeBtn.addEventListener('click', function() {
+                    this.closest('.modal').style.display = 'none';
+                });
+            });
+            
+            // 点击模态框外部关闭
+            window.addEventListener('click', function(event) {
+                if (event.target.classList.contains('modal')) {
+                    event.target.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
